@@ -1,11 +1,12 @@
 import * as vscode from "vscode"
+import { HelloWorldPanel } from "./HelloWorldPanel"
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "todosheet" is now active!')
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("todosheet.helloWorld", () => {
-			vscode.window.showInformationMessage("Hello from TodoSheet!")
+			HelloWorldPanel.createOrShow(context.extensionUri)
 		})
 	)
 
