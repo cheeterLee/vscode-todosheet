@@ -56,6 +56,12 @@ var app = (function () {
             return fn.call(this, event);
         };
     }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
     function children(element) {
         return Array.from(element.childNodes);
     }
@@ -183,6 +189,105 @@ var app = (function () {
         if (block && block.i) {
             outroing.delete(block);
             block.i(local);
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
+    function update_keyed_each(old_blocks, dirty, get_key, dynamic, ctx, list, lookup, node, destroy, create_each_block, next, get_context) {
+        let o = old_blocks.length;
+        let n = list.length;
+        let i = o;
+        const old_indexes = {};
+        while (i--)
+            old_indexes[old_blocks[i].key] = i;
+        const new_blocks = [];
+        const new_lookup = new Map();
+        const deltas = new Map();
+        const updates = [];
+        i = n;
+        while (i--) {
+            const child_ctx = get_context(ctx, list, i);
+            const key = get_key(child_ctx);
+            let block = lookup.get(key);
+            if (!block) {
+                block = create_each_block(key, child_ctx);
+                block.c();
+            }
+            else if (dynamic) {
+                // defer updates until all the DOM shuffling is done
+                updates.push(() => block.p(child_ctx, dirty));
+            }
+            new_lookup.set(key, new_blocks[i] = block);
+            if (key in old_indexes)
+                deltas.set(key, Math.abs(i - old_indexes[key]));
+        }
+        const will_move = new Set();
+        const did_move = new Set();
+        function insert(block) {
+            transition_in(block, 1);
+            block.m(node, next);
+            lookup.set(block.key, block);
+            next = block.first;
+            n--;
+        }
+        while (o && n) {
+            const new_block = new_blocks[n - 1];
+            const old_block = old_blocks[o - 1];
+            const new_key = new_block.key;
+            const old_key = old_block.key;
+            if (new_block === old_block) {
+                // do nothing
+                next = new_block.first;
+                o--;
+                n--;
+            }
+            else if (!new_lookup.has(old_key)) {
+                // remove old block
+                destroy(old_block, lookup);
+                o--;
+            }
+            else if (!lookup.has(new_key) || will_move.has(new_key)) {
+                insert(new_block);
+            }
+            else if (did_move.has(old_key)) {
+                o--;
+            }
+            else if (deltas.get(new_key) > deltas.get(old_key)) {
+                did_move.add(new_key);
+                insert(new_block);
+            }
+            else {
+                will_move.add(old_key);
+                o--;
+            }
+        }
+        while (o--) {
+            const old_block = old_blocks[o];
+            if (!new_lookup.has(old_block.key))
+                destroy(old_block, lookup);
+        }
+        while (n)
+            insert(new_blocks[n - 1]);
+        run_all(updates);
+        return new_blocks;
+    }
+    function validate_each_keys(ctx, list, get_context, get_key) {
+        const keys = new Set();
+        for (let i = 0; i < list.length; i++) {
+            const key = get_key(get_context(ctx, list, i));
+            if (keys.has(key)) {
+                throw new Error('Cannot have duplicate keys in a keyed each');
+            }
+            keys.add(key);
         }
     }
     function mount_component(component, target, anchor, customElement) {
@@ -348,12 +453,28 @@ var app = (function () {
             dispose();
         };
     }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
     function set_data_dev(text, data) {
         data = '' + data;
         if (text.data === data)
             return;
         dispatch_dev('SvelteDOMSetData', { node: text, data });
         text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
     }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
@@ -384,32 +505,116 @@ var app = (function () {
 
     /* webviews/components/Sidebar.svelte generated by Svelte v3.58.0 */
 
+    const { console: console_1 } = globals;
     const file = "webviews/components/Sidebar.svelte";
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[5] = list[i];
+    	child_ctx[6] = list;
+    	child_ctx[7] = i;
+    	return child_ctx;
+    }
+
+    // (16:1) {#each todos as todo (todo.text)}
+    function create_each_block(key_1, ctx) {
+    	let li;
+    	let button;
+    	let t0_value = /*todo*/ ctx[5].text + "";
+    	let t0;
+    	let button_class_value;
+    	let t1;
+    	let mounted;
+    	let dispose;
+
+    	function click_handler() {
+    		return /*click_handler*/ ctx[4](/*todo*/ ctx[5], /*each_value*/ ctx[6], /*todo_index*/ ctx[7]);
+    	}
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			li = element("li");
+    			button = element("button");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[5].completed ? 'completed' : '') + " svelte-xiv92j");
+    			add_location(button, file, 17, 3, 270);
+    			add_location(li, file, 16, 2, 262);
+    			this.first = li;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, li, anchor);
+    			append_dev(li, button);
+    			append_dev(button, t0);
+    			append_dev(li, t1);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", click_handler, false, false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty & /*todos*/ 1 && t0_value !== (t0_value = /*todo*/ ctx[5].text + "")) set_data_dev(t0, t0_value);
+
+    			if (dirty & /*todos*/ 1 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[5].completed ? 'completed' : '') + " svelte-xiv92j")) {
+    				attr_dev(button, "class", button_class_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(li);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(16:1) {#each todos as todo (todo.text)}",
+    		ctx
+    	});
+
+    	return block;
+    }
 
     function create_fragment(ctx) {
     	let form;
     	let input;
-    	let t0;
-    	let pre;
-    	let t1;
-    	let t2_value = JSON.stringify(/*todos*/ ctx[0], null, 2) + "";
-    	let t2;
-    	let t3;
+    	let t;
+    	let ul;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
     	let mounted;
     	let dispose;
+    	let each_value = /*todos*/ ctx[0];
+    	validate_each_argument(each_value);
+    	const get_key = ctx => /*todo*/ ctx[5].text;
+    	validate_each_keys(ctx, each_value, get_each_context, get_key);
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
+    	}
 
     	const block = {
     		c: function create() {
     			form = element("form");
     			input = element("input");
-    			t0 = space();
-    			pre = element("pre");
-    			t1 = text("    ");
-    			t2 = text(t2_value);
-    			t3 = text("\n");
-    			add_location(input, file, 11, 4, 204);
-    			add_location(form, file, 7, 0, 91);
-    			add_location(pre, file, 14, 0, 241);
+    			t = space();
+    			ul = element("ul");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			add_location(input, file, 11, 1, 183);
+    			add_location(form, file, 5, 0, 74);
+    			add_location(ul, file, 14, 0, 220);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -418,11 +623,14 @@ var app = (function () {
     			insert_dev(target, form, anchor);
     			append_dev(form, input);
     			set_input_value(input, /*text*/ ctx[1]);
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, pre, anchor);
-    			append_dev(pre, t1);
-    			append_dev(pre, t2);
-    			append_dev(pre, t3);
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, ul, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				if (each_blocks[i]) {
+    					each_blocks[i].m(ul, null);
+    				}
+    			}
 
     			if (!mounted) {
     				dispose = [
@@ -438,14 +646,24 @@ var app = (function () {
     				set_input_value(input, /*text*/ ctx[1]);
     			}
 
-    			if (dirty & /*todos*/ 1 && t2_value !== (t2_value = JSON.stringify(/*todos*/ ctx[0], null, 2) + "")) set_data_dev(t2, t2_value);
+    			if (dirty & /*todos, console*/ 1) {
+    				each_value = /*todos*/ ctx[0];
+    				validate_each_argument(each_value);
+    				validate_each_keys(ctx, each_value, get_each_context, get_key);
+    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block, null, get_each_context);
+    			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(form);
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(pre);
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(ul);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d();
+    			}
+
     			mounted = false;
     			run_all(dispose);
     		}
@@ -466,11 +684,11 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Sidebar', slots, []);
     	let todos = [];
-    	let text = '';
+    	let text = "";
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Sidebar> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<Sidebar> was created with unknown prop '${key}'`);
     	});
 
     	function input_input_handler() {
@@ -480,7 +698,12 @@ var app = (function () {
 
     	const submit_handler = () => {
     		$$invalidate(0, todos = [{ text, completed: false }, ...todos]);
-    		$$invalidate(1, text = '');
+    		$$invalidate(1, text = "");
+    	};
+
+    	const click_handler = (todo, each_value, todo_index) => {
+    		$$invalidate(0, each_value[todo_index].completed = !todo.completed, todos);
+    		console.log('completed: ' + todo.completed);
     	};
 
     	$$self.$capture_state = () => ({ todos, text });
@@ -494,7 +717,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [todos, text, input_input_handler, submit_handler];
+    	return [todos, text, input_input_handler, submit_handler, click_handler];
     }
 
     class Sidebar extends SvelteComponentDev {
