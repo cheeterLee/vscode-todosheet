@@ -21,6 +21,11 @@
         "command": "todosheet.askQuestion",
         "category": "TodoSheet",
         "title": "Ask Question"
+      },
+      {
+        "command": "todosheet.refresh",
+        "category": "TodoSheet",
+        "title": "Refresh"
       }
     ]
   },

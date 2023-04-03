@@ -293,7 +293,7 @@ var app = (function () {
     	return {
     		c() {
     			h1 = element("h1");
-    			h1.textContent = "hello world";
+    			h1.textContent = "hello world3";
     		},
     		m(target, anchor) {
     			insert(target, h1, anchor);
