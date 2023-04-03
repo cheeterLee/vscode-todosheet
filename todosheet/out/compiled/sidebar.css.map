@@ -5,8 +5,8 @@
     "Sidebar.svelte"
   ],
   "sourcesContent": [
-    "<script lang='ts'>\"use strict\";\n</script>\n\n<style>\n    div {\n        color: pink;\n    }\n</style>\n\n<div>Hello</div>"
+    "<script lang='ts'>\"use strict\";\nlet todos = [];\nlet count = 0;\n</script>\n<style>\n    div {\n        color: pink;\n    }\n</style>\n\n<input />\n\n<div>{count}</div>\n<button on:click={() => count++}>increment</button>"
   ],
   "names": [],
-  "mappings": "AAII,kBAAI,CACA,KAAK,CAAE,IACX"
+  "mappings": "AAKI,kBAAI,CACA,KAAK,CAAE,IACX"
 }
