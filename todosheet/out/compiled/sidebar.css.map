@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "sidebar.css",
+  "sources": [
+    "Sidebar.svelte"
+  ],
+  "sourcesContent": [
+    "<script lang='ts'>\"use strict\";\n</script>\n\n<style>\n    div {\n        color: pink;\n    }\n</style>\n\n<div>Hello</div>"
+  ],
+  "names": [],
+  "mappings": "AAII,kBAAI,CACA,KAAK,CAAE,IACX"
+}
