@@ -78,6 +78,23 @@ var app = (function () {
     function set_current_component(component) {
         current_component = component;
     }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    /**
+     * The `onMount` function schedules a callback to run as soon as the component has been mounted to the DOM.
+     * It must be called during the component's initialisation (but doesn't need to live *inside* the component;
+     * it can be called from an external module).
+     *
+     * `onMount` does not run inside a [server-side component](/docs#run-time-server-side-component-api).
+     *
+     * https://svelte.dev/docs#run-time-svelte-onmount
+     */
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -510,17 +527,17 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[5] = list[i];
-    	child_ctx[6] = list;
-    	child_ctx[7] = i;
+    	child_ctx[7] = list[i];
+    	child_ctx[8] = list;
+    	child_ctx[9] = i;
     	return child_ctx;
     }
 
-    // (16:1) {#each todos as todo (todo.text)}
+    // (26:1) {#each todos as todo (todo.text)}
     function create_each_block(key_1, ctx) {
     	let li;
     	let button;
-    	let t0_value = /*todo*/ ctx[5].text + "";
+    	let t0_value = /*todo*/ ctx[7].text + "";
     	let t0;
     	let button_class_value;
     	let t1;
@@ -528,7 +545,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[4](/*todo*/ ctx[5], /*each_value*/ ctx[6], /*todo_index*/ ctx[7]);
+    		return /*click_handler*/ ctx[4](/*todo*/ ctx[7], /*each_value*/ ctx[8], /*todo_index*/ ctx[9]);
     	}
 
     	const block = {
@@ -539,9 +556,9 @@ var app = (function () {
     			button = element("button");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[5].completed ? 'completed' : '') + " svelte-xiv92j");
-    			add_location(button, file, 17, 3, 270);
-    			add_location(li, file, 16, 2, 262);
+    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[7].completed ? 'completed' : '') + " svelte-16terpq");
+    			add_location(button, file, 27, 3, 579);
+    			add_location(li, file, 26, 2, 571);
     			this.first = li;
     		},
     		m: function mount(target, anchor) {
@@ -557,9 +574,9 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*todos*/ 1 && t0_value !== (t0_value = /*todo*/ ctx[5].text + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*todos*/ 1 && t0_value !== (t0_value = /*todo*/ ctx[7].text + "")) set_data_dev(t0, t0_value);
 
-    			if (dirty & /*todos*/ 1 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[5].completed ? 'completed' : '') + " svelte-xiv92j")) {
+    			if (dirty & /*todos*/ 1 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[7].completed ? 'completed' : '') + " svelte-16terpq")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -574,7 +591,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(16:1) {#each todos as todo (todo.text)}",
+    		source: "(26:1) {#each todos as todo (todo.text)}",
     		ctx
     	});
 
@@ -584,15 +601,19 @@ var app = (function () {
     function create_fragment(ctx) {
     	let form;
     	let input;
-    	let t;
+    	let t0;
     	let ul;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
+    	let t1;
+    	let button0;
+    	let t3;
+    	let button1;
     	let mounted;
     	let dispose;
     	let each_value = /*todos*/ ctx[0];
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*todo*/ ctx[5].text;
+    	const get_key = ctx => /*todo*/ ctx[7].text;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -605,16 +626,24 @@ var app = (function () {
     		c: function create() {
     			form = element("form");
     			input = element("input");
-    			t = space();
+    			t0 = space();
     			ul = element("ul");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			add_location(input, file, 11, 1, 183);
-    			add_location(form, file, 5, 0, 74);
-    			add_location(ul, file, 14, 0, 220);
+    			t1 = space();
+    			button0 = element("button");
+    			button0.textContent = "Click me";
+    			t3 = space();
+    			button1 = element("button");
+    			button1.textContent = "Click me";
+    			add_location(input, file, 21, 1, 492);
+    			add_location(form, file, 15, 0, 383);
+    			add_location(ul, file, 24, 0, 529);
+    			add_location(button0, file, 40, 0, 818);
+    			add_location(button1, file, 49, 0, 944);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -623,7 +652,7 @@ var app = (function () {
     			insert_dev(target, form, anchor);
     			append_dev(form, input);
     			set_input_value(input, /*text*/ ctx[1]);
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t0, anchor);
     			insert_dev(target, ul, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -632,10 +661,17 @@ var app = (function () {
     				}
     			}
 
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, button0, anchor);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, button1, anchor);
+
     			if (!mounted) {
     				dispose = [
     					listen_dev(input, "input", /*input_input_handler*/ ctx[2]),
-    					listen_dev(form, "submit", prevent_default(/*submit_handler*/ ctx[3]), false, true, false, false)
+    					listen_dev(form, "submit", prevent_default(/*submit_handler*/ ctx[3]), false, true, false, false),
+    					listen_dev(button0, "click", /*click_handler_1*/ ctx[5], false, false, false, false),
+    					listen_dev(button1, "click", /*click_handler_2*/ ctx[6], false, false, false, false)
     				];
 
     				mounted = true;
@@ -657,13 +693,17 @@ var app = (function () {
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(form);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(ul);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].d();
     			}
 
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(button0);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(button1);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -685,6 +725,19 @@ var app = (function () {
     	validate_slots('Sidebar', slots, []);
     	let todos = [];
     	let text = "";
+
+    	onMount(() => {
+    		window.addEventListener("message", event => {
+    			const message = event.data;
+
+    			switch (message.type) {
+    				case "new-todo":
+    					$$invalidate(0, todos = [{ text: message.value, completed: false }, ...todos]);
+    					break;
+    			}
+    		});
+    	});
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
@@ -703,10 +756,18 @@ var app = (function () {
 
     	const click_handler = (todo, each_value, todo_index) => {
     		$$invalidate(0, each_value[todo_index].completed = !todo.completed, todos);
-    		console.log('completed: ' + todo.completed);
+    		console.log("completed: " + todo.completed);
     	};
 
-    	$$self.$capture_state = () => ({ todos, text });
+    	const click_handler_1 = () => {
+    		tsvscode.postMessage({ type: "onInfo", value: "info message" });
+    	};
+
+    	const click_handler_2 = () => {
+    		tsvscode.postMessage({ type: "onError", value: "error message" });
+    	};
+
+    	$$self.$capture_state = () => ({ onMount, todos, text });
 
     	$$self.$inject_state = $$props => {
     		if ('todos' in $$props) $$invalidate(0, todos = $$props.todos);
@@ -717,7 +778,15 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [todos, text, input_input_handler, submit_handler, click_handler];
+    	return [
+    		todos,
+    		text,
+    		input_input_handler,
+    		submit_handler,
+    		click_handler,
+    		click_handler_1,
+    		click_handler_2
+    	];
     }
 
     class Sidebar extends SvelteComponentDev {

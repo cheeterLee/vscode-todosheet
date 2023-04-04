@@ -46,6 +46,11 @@
         "command": "todosheet.refresh",
         "category": "TodoSheet",
         "title": "Refresh"
+      },
+      {
+        "command": "todosheet.addTodo",
+        "category": "TodoSheet",
+        "title": "Add Todo"
       }
     ]
   },
