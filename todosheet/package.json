@@ -51,6 +51,11 @@
         "command": "todosheet.addTodo",
         "category": "TodoSheet",
         "title": "Add Todo"
+      },
+      {
+        "command": "todosheet.authenticate",
+        "category": "TodoSheet",
+        "title": "Authenticate"
       }
     ]
   },
