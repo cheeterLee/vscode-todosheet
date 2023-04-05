@@ -2,8 +2,11 @@ import * as vscode from "vscode"
 import { HelloWorldPanel } from "./HelloWorldPanel"
 import { SidebarProvider } from "./SidebarProvider"
 import { authenticate } from "./authenticate"
+import { TokenManager } from "./TokenManager"
 
 export function activate(context: vscode.ExtensionContext) {
+	TokenManager.globalState = context.globalState
+
 	const sidebarProvider = new SidebarProvider(context.extensionUri)
 
 	const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right)
@@ -40,7 +43,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("todosheet.helloWorld", () => {
-			HelloWorldPanel.createOrShow(context.extensionUri)
+			vscode.window.showInformationMessage(
+				"token value: " +  TokenManager.getToken()
+			)
+			// HelloWorldPanel.createOrShow(context.extensionUri)
 		})
 	)
 
