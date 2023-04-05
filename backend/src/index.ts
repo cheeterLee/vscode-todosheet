@@ -7,7 +7,8 @@ import { __prod__ } from "./constants"
 import { User } from "./entities/User"
 import { Strategy as GitHubStrategy } from "passport-github"
 import passport from "passport"
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken"
+import cors from 'cors'
 
 const main = async () => {
 	const dataSource = new DataSource({
@@ -16,7 +17,7 @@ const main = async () => {
 		port: 5432,
 		database: "todosheet",
 		entities: [join(__dirname, "./entities/*.*")],
-		// dropSchema: true, 
+		// dropSchema: true,
 		logging: !__prod__,
 		synchronize: !__prod__,
 	})
@@ -29,6 +30,8 @@ const main = async () => {
 	passport.serializeUser((user: any, done) => {
 		done(null, user.accessToken)
 	})
+
+	app.use(cors({ origin: "*" }))
 	app.use(passport.initialize())
 
 	passport.use(
@@ -51,9 +54,15 @@ const main = async () => {
 						githubId: profile.id,
 					}).save()
 				}
-				cb(null, { accessToken: jwt.sign({ userId: user.id }, "somerandomstring", {
-					expiresIn: "1y"
-				}) })
+				cb(null, {
+					accessToken: jwt.sign(
+						{ userId: user.id },
+						process.env.JWT_SECRET,
+						{
+							expiresIn: "1y",
+						}
+					),
+				})
 			}
 		)
 	)
@@ -67,6 +76,41 @@ const main = async () => {
 			res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`)
 		}
 	)
+
+	app.get("/me", async (req, res) => {
+		// Bearer 120jdklowqjed021901
+		const authHeader = req.headers.authorization
+		if (!authHeader) {
+			res.send({ user: null })
+			return
+		}
+
+		const token = authHeader.split(" ")[1]
+		if (!token) {
+			res.send({ user: null })
+			return
+		}
+
+		let userId = null
+
+		try {
+			const payload: any = jwt.verify(token, process.env.JWT_SECRET)
+			userId = payload.userId
+		} catch (err) {
+			res.send({ user: null })
+			return
+		}
+
+		if (!userId) {
+			res.send({ user: null })
+			return
+		}
+
+		const user = await User.findOneBy({ id: userId })
+		console.log(user)
+
+		res.send({ user })
+	})
 
 	app.get("/", (_, res) => {
 		res.send("Hello World")

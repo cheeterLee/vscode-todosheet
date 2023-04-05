@@ -527,17 +527,112 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[7] = list[i];
-    	child_ctx[8] = list;
-    	child_ctx[9] = i;
+    	child_ctx[10] = list[i];
+    	child_ctx[11] = list;
+    	child_ctx[12] = i;
     	return child_ctx;
     }
 
-    // (26:1) {#each todos as todo (todo.text)}
+    // (37:0) {:else}
+    function create_else_block(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "No user is logged in :(";
+    			add_location(div, file, 37, 1, 1084);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(37:0) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (35:15) 
+    function create_if_block_1(ctx) {
+    	let pre;
+    	let t_value = JSON.stringify(/*user*/ ctx[3], null, 2) + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			pre = element("pre");
+    			t = text(t_value);
+    			add_location(pre, file, 35, 1, 1032);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, pre, anchor);
+    			append_dev(pre, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*user*/ 8 && t_value !== (t_value = JSON.stringify(/*user*/ ctx[3], null, 2) + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(pre);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(35:15) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (33:0) {#if loading}
+    function create_if_block(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Loading... :)";
+    			add_location(div, file, 33, 1, 990);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(33:0) {#if loading}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (51:1) {#each todos as todo (todo.text)}
     function create_each_block(key_1, ctx) {
     	let li;
     	let button;
-    	let t0_value = /*todo*/ ctx[7].text + "";
+    	let t0_value = /*todo*/ ctx[10].text + "";
     	let t0;
     	let button_class_value;
     	let t1;
@@ -545,7 +640,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[4](/*todo*/ ctx[7], /*each_value*/ ctx[8], /*todo_index*/ ctx[9]);
+    		return /*click_handler*/ ctx[6](/*todo*/ ctx[10], /*each_value*/ ctx[11], /*todo_index*/ ctx[12]);
     	}
 
     	const block = {
@@ -556,9 +651,9 @@ var app = (function () {
     			button = element("button");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[7].completed ? 'completed' : '') + " svelte-16terpq");
-    			add_location(button, file, 27, 3, 579);
-    			add_location(li, file, 26, 2, 571);
+    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[10].completed ? 'completed' : '') + " svelte-16terpq");
+    			add_location(button, file, 52, 3, 1322);
+    			add_location(li, file, 51, 2, 1314);
     			this.first = li;
     		},
     		m: function mount(target, anchor) {
@@ -574,9 +669,9 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*todos*/ 1 && t0_value !== (t0_value = /*todo*/ ctx[7].text + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*todos*/ 1 && t0_value !== (t0_value = /*todo*/ ctx[10].text + "")) set_data_dev(t0, t0_value);
 
-    			if (dirty & /*todos*/ 1 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[7].completed ? 'completed' : '') + " svelte-16terpq")) {
+    			if (dirty & /*todos*/ 1 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[10].completed ? 'completed' : '') + " svelte-16terpq")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -591,7 +686,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(26:1) {#each todos as todo (todo.text)}",
+    		source: "(51:1) {#each todos as todo (todo.text)}",
     		ctx
     	});
 
@@ -599,21 +694,31 @@ var app = (function () {
     }
 
     function create_fragment(ctx) {
+    	let t0;
     	let form;
     	let input;
-    	let t0;
+    	let t1;
     	let ul;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
-    	let t1;
+    	let t2;
     	let button0;
-    	let t3;
+    	let t4;
     	let button1;
     	let mounted;
     	let dispose;
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*loading*/ ctx[2]) return create_if_block;
+    		if (/*user*/ ctx[3]) return create_if_block_1;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type(ctx);
     	let each_value = /*todos*/ ctx[0];
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*todo*/ ctx[7].text;
+    	const get_key = ctx => /*todo*/ ctx[10].text;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -624,35 +729,39 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
+    			if_block.c();
+    			t0 = space();
     			form = element("form");
     			input = element("input");
-    			t0 = space();
+    			t1 = space();
     			ul = element("ul");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t1 = space();
+    			t2 = space();
     			button0 = element("button");
     			button0.textContent = "Click me";
-    			t3 = space();
+    			t4 = space();
     			button1 = element("button");
     			button1.textContent = "Click me";
-    			add_location(input, file, 21, 1, 492);
-    			add_location(form, file, 15, 0, 383);
-    			add_location(ul, file, 24, 0, 529);
-    			add_location(button0, file, 40, 0, 818);
-    			add_location(button1, file, 49, 0, 944);
+    			add_location(input, file, 46, 1, 1235);
+    			add_location(form, file, 40, 0, 1126);
+    			add_location(ul, file, 49, 0, 1272);
+    			add_location(button0, file, 65, 0, 1561);
+    			add_location(button1, file, 74, 0, 1687);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, t0, anchor);
     			insert_dev(target, form, anchor);
     			append_dev(form, input);
     			set_input_value(input, /*text*/ ctx[1]);
-    			insert_dev(target, t0, anchor);
+    			insert_dev(target, t1, anchor);
     			insert_dev(target, ul, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -661,23 +770,35 @@ var app = (function () {
     				}
     			}
 
-    			insert_dev(target, t1, anchor);
+    			insert_dev(target, t2, anchor);
     			insert_dev(target, button0, anchor);
-    			insert_dev(target, t3, anchor);
+    			insert_dev(target, t4, anchor);
     			insert_dev(target, button1, anchor);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "input", /*input_input_handler*/ ctx[2]),
-    					listen_dev(form, "submit", prevent_default(/*submit_handler*/ ctx[3]), false, true, false, false),
-    					listen_dev(button0, "click", /*click_handler_1*/ ctx[5], false, false, false, false),
-    					listen_dev(button1, "click", /*click_handler_2*/ ctx[6], false, false, false, false)
+    					listen_dev(input, "input", /*input_input_handler*/ ctx[4]),
+    					listen_dev(form, "submit", prevent_default(/*submit_handler*/ ctx[5]), false, true, false, false),
+    					listen_dev(button0, "click", /*click_handler_1*/ ctx[7], false, false, false, false),
+    					listen_dev(button1, "click", /*click_handler_2*/ ctx[8], false, false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(t0.parentNode, t0);
+    				}
+    			}
+
     			if (dirty & /*text*/ 2 && input.value !== /*text*/ ctx[1]) {
     				set_input_value(input, /*text*/ ctx[1]);
     			}
@@ -692,17 +813,19 @@ var app = (function () {
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(form);
+    			if_block.d(detaching);
     			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(form);
+    			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(ul);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].d();
     			}
 
-    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(t2);
     			if (detaching) detach_dev(button0);
-    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(t4);
     			if (detaching) detach_dev(button1);
     			mounted = false;
     			run_all(dispose);
@@ -723,19 +846,32 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Sidebar', slots, []);
+    	let accessToken = "";
     	let todos = [];
     	let text = "";
+    	let loading = true;
+    	let user = null;
 
-    	onMount(() => {
-    		window.addEventListener("message", event => {
+    	onMount(async () => {
+    		window.addEventListener("message", async event => {
     			const message = event.data;
 
     			switch (message.type) {
     				case "new-todo":
     					$$invalidate(0, todos = [{ text: message.value, completed: false }, ...todos]);
     					break;
+    				case "token":
+    					accessToken = message.value;
+    					const response = await fetch(`${apiBaseUrl}/me`, {
+    						headers: { authorization: `Bearer ${accessToken}` }
+    					});
+    					const data = await response.json();
+    					$$invalidate(3, user = data.user);
+    					$$invalidate(2, loading = false);
     			}
     		});
+
+    		tsvscode.postMessage({ type: "get-token", value: undefined });
     	});
 
     	const writable_props = [];
@@ -767,11 +903,21 @@ var app = (function () {
     		tsvscode.postMessage({ type: "onError", value: "error message" });
     	};
 
-    	$$self.$capture_state = () => ({ onMount, todos, text });
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		accessToken,
+    		todos,
+    		text,
+    		loading,
+    		user
+    	});
 
     	$$self.$inject_state = $$props => {
+    		if ('accessToken' in $$props) accessToken = $$props.accessToken;
     		if ('todos' in $$props) $$invalidate(0, todos = $$props.todos);
     		if ('text' in $$props) $$invalidate(1, text = $$props.text);
+    		if ('loading' in $$props) $$invalidate(2, loading = $$props.loading);
+    		if ('user' in $$props) $$invalidate(3, user = $$props.user);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -781,6 +927,8 @@ var app = (function () {
     	return [
     		todos,
     		text,
+    		loading,
+    		user,
     		input_input_handler,
     		submit_handler,
     		click_handler,
