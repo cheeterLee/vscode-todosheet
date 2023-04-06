@@ -14,7 +14,7 @@ export const isAuth: RequestHandler<{}, any, any, {}> = (req, _res, next) => {
 
 		try {
 			const payload: any = jwt.verify(token, process.env.JWT_SECRET)
-            ;(req as any).userId = payload.userId
+            req.userId = payload.userId
             next()
             return
         } catch {}
