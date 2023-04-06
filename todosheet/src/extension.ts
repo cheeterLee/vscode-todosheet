@@ -50,11 +50,11 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	)
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand("todosheet.authenticate", () => {
-			authenticate()
-		})
-	)
+	// context.subscriptions.push(
+	// 	vscode.commands.registerCommand("todosheet.authenticate", () => {
+	// 		authenticate()
+	// 	})
+	// )
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("todosheet.refresh", async () => {
