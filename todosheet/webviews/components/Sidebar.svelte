@@ -4,10 +4,13 @@
 	import Todos from "./Todos.svelte"
 
 	let accessToken = ""
-	let todos: Array<{ text: string; completed: boolean }> = []
-	let text = ""
 	let loading = true
 	let user: User | null = null
+	let page: 'todos' | 'contact' = tsvscode.getState()?.page || 'todos'
+
+	$: {
+		tsvscode.setState({ page })
+	}
 
 	onMount(async () => {
 		window.addEventListener("message", async (event) => {
@@ -32,7 +35,21 @@
 {#if loading}
 	<div>Loading... :)</div>
 {:else if user}
-	<Todos {user} {accessToken} />
+	{#if page === 'todos'}
+		<Todos {user} {accessToken} />
+		<button
+			on:click={() => {
+				page = 'contact'
+			}}>
+			Go to Contact
+		</button>
+	{:else}
+		<div>😎 Contact me at sc212zl@leeds.ac.uk</div>
+		<button
+		on:click={() => {
+			page = 'todos'
+		}}>Go Back</button>
+	{/if}
 	<button on:click={() => {
 		accessToken = ""
 		user = null
