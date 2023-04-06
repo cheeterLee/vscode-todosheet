@@ -566,17 +566,17 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[6] = list[i];
-    	child_ctx[7] = list;
-    	child_ctx[8] = i;
+    	child_ctx[8] = list[i];
+    	child_ctx[9] = list;
+    	child_ctx[10] = i;
     	return child_ctx;
     }
 
-    // (62:1) {#each todos as todo (todo.text)}
+    // (51:1) {#each todos as todo (todo.id)}
     function create_each_block(key_1, ctx) {
     	let li;
     	let button;
-    	let t0_value = /*todo*/ ctx[6].text + "";
+    	let t0_value = /*todo*/ ctx[8].text + "";
     	let t0;
     	let button_class_value;
     	let t1;
@@ -584,7 +584,7 @@ var app = (function () {
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[5](/*todo*/ ctx[6], /*each_value*/ ctx[7], /*todo_index*/ ctx[8]);
+    		return /*click_handler*/ ctx[7](/*todo*/ ctx[8], /*each_value*/ ctx[9], /*todo_index*/ ctx[10]);
     	}
 
     	const block = {
@@ -595,9 +595,9 @@ var app = (function () {
     			button = element("button");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[6].completed ? 'completed' : '') + " svelte-16terpq");
-    			add_location(button, file$1, 63, 3, 1503);
-    			add_location(li, file$1, 62, 2, 1495);
+    			attr_dev(button, "class", button_class_value = "btn-list " + (/*todo*/ ctx[8].completed ? 'completed' : '') + " svelte-16terpq");
+    			add_location(button, file$1, 52, 3, 1202);
+    			add_location(li, file$1, 51, 2, 1194);
     			this.first = li;
     		},
     		m: function mount(target, anchor) {
@@ -613,9 +613,9 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*todos*/ 4 && t0_value !== (t0_value = /*todo*/ ctx[6].text + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*todos*/ 8 && t0_value !== (t0_value = /*todo*/ ctx[8].text + "")) set_data_dev(t0, t0_value);
 
-    			if (dirty & /*todos*/ 4 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[6].completed ? 'completed' : '') + " svelte-16terpq")) {
+    			if (dirty & /*todos*/ 8 && button_class_value !== (button_class_value = "btn-list " + (/*todo*/ ctx[8].completed ? 'completed' : '') + " svelte-16terpq")) {
     				attr_dev(button, "class", button_class_value);
     			}
     		},
@@ -630,7 +630,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(62:1) {#each todos as todo (todo.text)}",
+    		source: "(51:1) {#each todos as todo (todo.id)}",
     		ctx
     	});
 
@@ -651,9 +651,9 @@ var app = (function () {
     	let each_1_lookup = new Map();
     	let mounted;
     	let dispose;
-    	let each_value = /*todos*/ ctx[2];
+    	let each_value = /*todos*/ ctx[3];
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*todo*/ ctx[6].text;
+    	const get_key = ctx => /*todo*/ ctx[8].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -677,10 +677,10 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(div, file$1, 49, 0, 1220);
-    			add_location(input, file$1, 57, 4, 1416);
-    			add_location(form, file$1, 51, 0, 1254);
-    			add_location(ul, file$1, 60, 0, 1453);
+    			add_location(div, file$1, 38, 0, 1001);
+    			add_location(input, file$1, 46, 1, 1117);
+    			add_location(form, file$1, 40, 0, 1035);
+    			add_location(ul, file$1, 49, 0, 1154);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -692,7 +692,7 @@ var app = (function () {
     			insert_dev(target, t2, anchor);
     			insert_dev(target, form, anchor);
     			append_dev(form, input);
-    			set_input_value(input, /*text*/ ctx[1]);
+    			set_input_value(input, /*text*/ ctx[2]);
     			insert_dev(target, t3, anchor);
     			insert_dev(target, ul, anchor);
 
@@ -704,8 +704,8 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input, "input", /*input_input_handler*/ ctx[3]),
-    					listen_dev(form, "submit", prevent_default(/*submit_handler*/ ctx[4]), false, true, false, false)
+    					listen_dev(input, "input", /*input_input_handler*/ ctx[5]),
+    					listen_dev(form, "submit", prevent_default(/*submit_handler*/ ctx[6]), false, true, false, false)
     				];
 
     				mounted = true;
@@ -714,12 +714,12 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*user*/ 1 && t1_value !== (t1_value = /*user*/ ctx[0].name + "")) set_data_dev(t1, t1_value);
 
-    			if (dirty & /*text*/ 2 && input.value !== /*text*/ ctx[1]) {
-    				set_input_value(input, /*text*/ ctx[1]);
+    			if (dirty & /*text*/ 4 && input.value !== /*text*/ ctx[2]) {
+    				set_input_value(input, /*text*/ ctx[2]);
     			}
 
-    			if (dirty & /*todos, console*/ 4) {
-    				each_value = /*todos*/ ctx[2];
+    			if (dirty & /*todos, fetch, apiBaseUrl, JSON, accessToken, console*/ 10) {
+    				each_value = /*todos*/ ctx[3];
     				validate_each_argument(each_value);
     				validate_each_keys(ctx, each_value, get_each_context, get_key);
     				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block, null, get_each_context);
@@ -758,45 +758,54 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Todos', slots, []);
     	let { user } = $$props;
-
-    	// export let accessToken: string;
+    	let { accessToken } = $$props;
     	let text = "";
-
     	let todos = [];
 
-    	// async function addTodo(t: string) {
-    	//     const response = await fetch(`${apiBaseUrl}/todo`, {
-    	//         method: "POST",
-    	//         body: JSON.stringify({
-    	//             text: t,
-    	//         }),
-    	//         headers: {
-    	//             "content-type": "application/json",
-    	//             authorization: `Bearer ${accessToken}`,
-    	//         },
-    	//     });
-    	//     const { todo } = await response.json();
-    	//     todos = [todo, ...todos];
-    	// }
+    	async function addTodo(t) {
+    		const response = await fetch(`${apiBaseUrl}/todo`, {
+    			method: "POST",
+    			body: JSON.stringify({ text: t }),
+    			headers: {
+    				"content-type": "application/json",
+    				authorization: `Bearer ${accessToken}`
+    			}
+    		});
+
+    		const { todo } = await response.json();
+    		$$invalidate(3, todos = [todo, ...todos]);
+    	}
+
     	onMount(async () => {
     		window.addEventListener("message", async event => {
-    			event.data;
-    		}); // switch (message.type) {
-    		//     case "new-todo":
-    		//         addTodo(message.value);
-    		//         break;
-    	}); // }
-    	// const response = await fetch(`${apiBaseUrl}/todo`, {
-    	//     headers: {
-    	//         authorization: `Bearer ${accessToken}`,
+    			const message = event.data;
+
+    			switch (message.type) {
+    				case "new-todo":
+    					addTodo(message.value);
+    					break;
+    			}
+    		});
+
+    		const response = await fetch(`${apiBaseUrl}/todo`, {
+    			headers: { authorization: `Bearer ${accessToken}` }
+    		});
+
+    		const payload = await response.json();
+    		$$invalidate(3, todos = payload.todos);
+    	});
 
     	$$self.$$.on_mount.push(function () {
     		if (user === undefined && !('user' in $$props || $$self.$$.bound[$$self.$$.props['user']])) {
     			console_1.warn("<Todos> was created without expected prop 'user'");
     		}
+
+    		if (accessToken === undefined && !('accessToken' in $$props || $$self.$$.bound[$$self.$$.props['accessToken']])) {
+    			console_1.warn("<Todos> was created without expected prop 'accessToken'");
+    		}
     	});
 
-    	const writable_props = ['user'];
+    	const writable_props = ['user', 'accessToken'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<Todos> was created with unknown prop '${key}'`);
@@ -804,44 +813,70 @@ var app = (function () {
 
     	function input_input_handler() {
     		text = this.value;
-    		$$invalidate(1, text);
+    		$$invalidate(2, text);
     	}
 
     	const submit_handler = async () => {
-    		// addTodo(text);
-    		$$invalidate(2, todos = [{ text, completed: false }, ...todos]);
-
-    		$$invalidate(1, text = '');
+    		addTodo(text);
+    		$$invalidate(2, text = "");
     	};
 
-    	const click_handler = (todo, each_value, todo_index) => {
-    		$$invalidate(2, each_value[todo_index].completed = !todo.completed, todos);
-    		console.log("completed: " + todo.completed);
+    	const click_handler = async (todo, each_value, todo_index) => {
+    		$$invalidate(3, each_value[todo_index].completed = !todo.completed, todos);
+
+    		const response = await fetch(`${apiBaseUrl}/todo`, {
+    			method: "PUT",
+    			body: JSON.stringify({ id: todo.id }), // completed: todo.completed,
+    			headers: {
+    				"content-type": "application/json",
+    				authorization: `Bearer ${accessToken}`
+    			}
+    		});
+
+    		console.log(await response.json());
     	};
 
     	$$self.$$set = $$props => {
     		if ('user' in $$props) $$invalidate(0, user = $$props.user);
+    		if ('accessToken' in $$props) $$invalidate(1, accessToken = $$props.accessToken);
     	};
 
-    	$$self.$capture_state = () => ({ onMount, user, text, todos });
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		user,
+    		accessToken,
+    		text,
+    		todos,
+    		addTodo
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ('user' in $$props) $$invalidate(0, user = $$props.user);
-    		if ('text' in $$props) $$invalidate(1, text = $$props.text);
-    		if ('todos' in $$props) $$invalidate(2, todos = $$props.todos);
+    		if ('accessToken' in $$props) $$invalidate(1, accessToken = $$props.accessToken);
+    		if ('text' in $$props) $$invalidate(2, text = $$props.text);
+    		if ('todos' in $$props) $$invalidate(3, todos = $$props.todos);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [user, text, todos, input_input_handler, submit_handler, click_handler];
+    	return [
+    		user,
+    		accessToken,
+    		text,
+    		todos,
+    		addTodo,
+    		input_input_handler,
+    		submit_handler,
+    		click_handler
+    	];
     }
 
     class Todos extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { user: 0 });
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { user: 0, accessToken: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -856,6 +891,14 @@ var app = (function () {
     	}
 
     	set user(value) {
+    		throw new Error("<Todos>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get accessToken() {
+    		throw new Error("<Todos>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set accessToken(value) {
     		throw new Error("<Todos>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -873,7 +916,7 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Login with github";
-    			add_location(button, file, 37, 1, 1047);
+    			add_location(button, file, 37, 1, 1061);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -914,7 +957,10 @@ var app = (function () {
     	let dispose;
 
     	todos_1 = new Todos({
-    			props: { user: /*user*/ ctx[2] },
+    			props: {
+    				user: /*user*/ ctx[2],
+    				accessToken: /*accessToken*/ ctx[0]
+    			},
     			$$inline: true
     		});
 
@@ -924,7 +970,7 @@ var app = (function () {
     			t0 = space();
     			button = element("button");
     			button.textContent = "Logout";
-    			add_location(button, file, 31, 1, 896);
+    			add_location(button, file, 31, 1, 910);
     		},
     		m: function mount(target, anchor) {
     			mount_component(todos_1, target, anchor);
@@ -940,6 +986,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const todos_1_changes = {};
     			if (dirty & /*user*/ 4) todos_1_changes.user = /*user*/ ctx[2];
+    			if (dirty & /*accessToken*/ 1) todos_1_changes.accessToken = /*accessToken*/ ctx[0];
     			todos_1.$set(todos_1_changes);
     		},
     		i: function intro(local) {

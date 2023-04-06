@@ -8,7 +8,9 @@ import { User } from "./entities/User"
 import { Strategy as GitHubStrategy } from "passport-github"
 import passport from "passport"
 import jwt from "jsonwebtoken"
-import cors from 'cors'
+import cors from "cors"
+import { Todo } from "./entities/Todo"
+import { isAuth } from "./isAuth"
 
 const main = async () => {
 	const dataSource = new DataSource({
@@ -33,6 +35,7 @@ const main = async () => {
 
 	app.use(cors({ origin: "*" }))
 	app.use(passport.initialize())
+	app.use(express.json())
 
 	passport.use(
 		new GitHubStrategy(
@@ -76,6 +79,39 @@ const main = async () => {
 			res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`)
 		}
 	)
+
+	app.get("/todo", isAuth, async (req: any, res) => {
+		const todos = await Todo.find({
+			where: { createrId: req.userId },
+			order: { id: "DESC" },
+		})
+		res.send({ todos })
+	})
+
+	app.post("/todo", isAuth, async (req: any, res) => {
+		const todo = await Todo.create({
+			text: req.body.text,
+			createrId: req.userId,
+		}).save()
+		res.send({ todo })
+	})
+
+	app.put("/todo", isAuth, async (req: any, res) => {
+		const todo = await Todo.findOne({
+			where: { id: req.body.id },
+		});
+		if (!todo) {
+		  res.send({ todo: null });
+		  return;
+		}
+		if (todo.createrId !== req.userId) {
+		  throw new Error("not authorized");
+		}
+		todo.completed = !todo.completed;
+		await todo.save();
+		res.send({ todo });
+	  });
+	
 
 	app.get("/me", async (req, res) => {
 		// Bearer 120jdklowqjed021901
