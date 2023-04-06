@@ -3,7 +3,7 @@ import { apiBaseUrl } from "./constants"
 import * as polka from "polka"
 import { TokenManager } from "./TokenManager"
 
-export const authenticate = (fn: () => void) => {
+export const authenticate = (fn: () => void | null) => {
 	const app = polka()
 
 	app.get(`/auth/:token`, async (req, res) => {
