@@ -151,7 +151,7 @@ const main = async () => {
 	app.get("/", (_, res) => {
 		res.send("Hello World")
 	})
-	app.listen(3000, () => {
+	app.listen(process.env.PORT, () => {
 		console.log("Server started on http://localhost:3000")
 	})
 }
