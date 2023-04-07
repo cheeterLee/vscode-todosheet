@@ -42,9 +42,11 @@ const isAuth_1 = require("./isAuth");
 const main = async () => {
     const dataSource = new typeorm_1.DataSource({
         type: "postgres",
-        host: "localhost",
-        port: 5432,
-        database: "todosheet",
+        host: process.env.PGHOST,
+        port: process.env.PGPORT,
+        username: process.env.PGUSERNAME,
+        password: process.env.PGPASSWORD,
+        database: process.env.PGDATABASE,
         entities: [(0, path_1.join)(__dirname, "./entities/*.*")],
         logging: !constants_1.__prod__,
         synchronize: !constants_1.__prod__,

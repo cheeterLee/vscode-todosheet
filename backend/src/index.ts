@@ -15,9 +15,11 @@ import { isAuth } from "./isAuth"
 const main = async () => {
 	const dataSource = new DataSource({
 		type: "postgres",
-		host: "localhost",
-		port: 5432,
-		database: "todosheet",
+		host: process.env.PGHOST,
+		port: process.env.PGPORT,
+		username: process.env.PGUSERNAME,
+		password: process.env.PGPASSWORD,
+		database: process.env.PGDATABASE,
 		entities: [join(__dirname, "./entities/*.*")],
 		// dropSchema: true,
 		logging: !__prod__,
