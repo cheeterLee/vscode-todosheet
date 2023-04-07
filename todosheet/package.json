@@ -9,6 +9,7 @@
   "categories": [
     "Other"
   ],
+  "publisher": "cheeterlee",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
