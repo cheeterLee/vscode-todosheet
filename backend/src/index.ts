@@ -44,7 +44,7 @@ const main = async () => {
 			{
 				clientID: process.env.GITHUB_CLIENT_ID,
 				clientSecret: process.env.GITHUB_CLIENT_SECRET,
-				callbackURL: "https://todosheet.up.railway.app/auth/github/callback",
+				callbackURL: "http://localhost:3000/auth/github/callback",
 			},
 			async (_accessToken, _refreshToken, profile, cb) => {
 				let user = await User.findOne({

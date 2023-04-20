@@ -2,7 +2,7 @@
   "name": "todosheet",
   "displayName": "TodoSheet",
   "description": "Tracking things you are about to do..",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.77.0"
   },

@@ -1,3 +1,3 @@
 // export const apiBaseUrl = 'http://localhost:3000'
 
-export const apiBaseUrl = 'https://todosheet.up.railway.app'
+export const apiBaseUrl = 'http://localhost:3000'

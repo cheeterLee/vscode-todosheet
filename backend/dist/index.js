@@ -63,7 +63,7 @@ const main = async () => {
     passport_1.default.use(new passport_github_1.Strategy({
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: "https://todosheet.up.railway.app/auth/github/callback",
+        callbackURL: "http://localhost:3000/auth/github/callback",
     }, async (_accessToken, _refreshToken, profile, cb) => {
         let user = await User_1.User.findOne({
             where: { githubId: profile.id },
